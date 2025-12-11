@@ -25,14 +25,28 @@ def home():
 def browse():
     connection = connect_db()
 
-    cursor = connection.cursor
+    cursor = connection.cursor()
 
     cursor.execute("SELECT * FROM `Product`")
 
     result = cursor.fetchall()
     
     connection.close()
-    return render_template("browser.html.jinja")
+    return render_template("browse.html.jinja", product=result)
+
+@app.route("/product/<int:product_id>")
+def product_page(product_id):
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT * FROM `Product` WHERE `ID` = $s", (product_id,) )
+
+    result = cursor.fetchone()
+    
+    connection.close()
+    
+    return render_template("product.html.jinja", product=result)
 
 
 
