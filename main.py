@@ -8,12 +8,12 @@ config = Dynaconf(settings_files=["settings.toml"])
 
 def connect_db():
     conn = pymysql.connect(
-    host = "db.steamcenter.tech",
-    user = "joliverasfair",
-    password = config.password,
-    database = "joliverasfair_chef_riah_premuim",
-    autocommit = True,
-    cursorclass = pymysql.cursors.DictCursor
+        host = "db.steamcenter.tech",
+        user = "joliverasfair",
+        password = config.password,
+        database = "joliverasfair_chef_riah_premuim",
+        autocommit = True,
+        cursorclass = pymysql.cursors.DictCursor
     )
     return conn
 
@@ -32,7 +32,7 @@ def browse():
     result = cursor.fetchall()
     
     connection.close()
-    return render_template("browse.html.jinja", product=result)
+    return render_template("browse.html.jinja")
 
 @app.route("/product/<int:product_id>")
 def product_page(product_id):
