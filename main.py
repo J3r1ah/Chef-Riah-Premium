@@ -71,7 +71,9 @@ def browse():
     result = cursor.fetchall()
     
     connection.close()
+    return render_template("browse.html.jinja", products = result)
     return render_template("browse.html.jinja")
+
 
 @app.route("/product/<int:product_id>")
 def product_page(product_id):
@@ -89,6 +91,21 @@ def product_page(product_id):
         abort(404)
     return render_template("product.html.jinja", product = result)
 
+@app.route ("/product/<product_id>/add_to_cart", methods=["POST"])
+@login_required
+def add_to_cart(product_id):
+    
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute("INSERT INTO `CART` (`U")
+    
+    
+   
+
+
+    return redirect("/cart")
 
 @app.route("/register", methods=["POST", "GET"])
 def register():  
@@ -162,4 +179,5 @@ def login():
 def logout():
     logout_user()
     return redirect("/")   
+
 

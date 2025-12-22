@@ -7,7 +7,7 @@
   </head>
   
   <body>
-  {%include "components/navbar.html.jinja" %}
+  {% include "components/navbar.html.jinja" %}
 
 <h1>{{ product['Name']}}</h1>
 
@@ -17,6 +17,12 @@
 <div class="text-2xl font-bold mt-5"> ${{ product['Price'] }} </div>
 <div class="mt-4"> {{ product['Description'] }} </div>
 
+<form>
+
+
+</form>
+
+  </body>
 
 
 </html>
