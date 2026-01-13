@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, redirect, abort 
-from flask_login import LoginManager, login_user, logout_user, login_required 
-import pymysql
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+import pymysql 
 
 from dynaconf import Dynaconf
 
@@ -75,13 +75,13 @@ def browse():
     return render_template("browse.html.jinja")
 
 
-@app.route("/product/<int:product_id>")
+@app.route("/product/<product_id>")
 def product_page(product_id):
     connection = connect_db()
 
     cursor = connection.cursor()
 
-    cursor.execute("SELECT * FROM `Product` WHERE `ID` = $s", (product_id,) )
+    cursor.execute("SELECT * FROM `Product` WHERE `ID` = %s", (product_id,) )
 
     result = cursor.fetchone()
     
@@ -89,21 +89,30 @@ def product_page(product_id):
     
     if result is None:
         abort(404)
-    return render_template("product.html.jinja", product = result)
+    else:
+        return render_template("product.html.jinja", product = result)
 
-@app.route ("/product/<product_id>/add_to_cart", methods=["POST"])
+@app.route("/product/<product_id>/add_to_cart", methods=["POST"])
 @login_required
 def add_to_cart(product_id):
-    
     connection = connect_db()
-
     cursor = connection.cursor()
 
-    cursor.execute("INSERT INTO `CART` (`U")
-    
-    
-   
+    quantity = request.form.get("quantity", 1) 
+    user_id = current_user.id  
 
+    cursor.execute(
+        """
+        INSERT INTO Cart (Quantity, ProductID, UserID)
+        VALUES (%s, %s, %s)
+        ON DUPLICATE KEY UPDATE
+        Quantity = Quantity + %s 
+        """,
+        (quantity, product_id, user_id, quantity)
+    )
+
+    connection.commit() 
+    connection.close()
 
     return redirect("/cart")
 
@@ -179,5 +188,116 @@ def login():
 def logout():
     logout_user()
     return redirect("/")   
+
+
+@app.route("/cart")
+@login_required
+def cart():
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT * FROM Cart
+        Join Product ON Product.ID = Cart.ProductID
+        WHERE UserID = %s             
+                   
+    """,(current_user.id))
+
+    result = cursor.fetchall()
+
+    connection.close()
+
+    return render_template("cart.html.jinja", cart=result)
+
+
+@app.route("/cart/<product_id>/update-qty", methods=["POST"])
+@login_required
+def update_qty(product_id):
+    new_qty = request.form["qty"]
+    
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+            UPDATE `Cart`
+            SET `Quantity` = %s
+            WHERE `ProductID` = %s AND `UserID` = %s
+        """, (new_qty, product_id, current_user.id) )
+
+    connection.close()
+
+    return redirect("/cart")
+    
+    
+@app.route("/checkout")
+@login_required
+def checkout():
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT * FROM Cart
+        Join Product ON Product.ID = Cart.ProductID
+        WHERE UserID = %s             
+                   
+    """,(current_user.id))
+
+    result = cursor.fetchall()
+
+    connection.close()
+
+    return render_template("checkout.html.jinja", cart=result)
+
+
+
+@app.route("/payment", methods=["POST"])
+@login_required
+def payment():
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        DELETE FROM `Cart`
+        WHERE `UserID` = %s
+    """, (current_user.id,) )
+
+    connection.close()
+
+    flash("Payment processed successfully! Thank you for your purchase.")
+
+    return redirect("/browse")
+
+
+@app.route("/order")
+def order():
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute("""SELECT 
+                   `ID ,
+                   `Timestamp`,
+                   SUM(`SaleProduct`.`Quantity`) AS 'Quantity',
+                   SUM(`SaleProduct`.`Quantity` * `Product`.`Price`) AS 'Total'
+    FROM `Sale`
+    JOIN `SaleProduct` ON `SaleProduct`.`SaleID` = `Sale`.`ID`
+    JOIN `Product` ON `Product`.`ID` = `SaleProduct`.`ProductID`
+    GROUP BY `Sale`.`ID`
+""", (current_user.id,) )
+    
+    result = cursor.fetchall()
+
+    connection.close()
+
+    return render_template("order.html.jinja", sales=result)
+
+
+
+
+
 
 

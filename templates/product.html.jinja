@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body>
+{% include "components/navbar.html.jinja" %}
+
+<h1> {{ product['Name'] }} </h1>
+
+<div class="max-w-4xl mx-auto p-6 mb-5">
+    <img class="h-96 mx-auto mt-10" src="{{ product['Image']}}" >
+    <div class="text-2xl font-bold mt-5"> ${{ product['Price'] }} </div>
+    <div class="mt-4"> {{ product['Description'] }} </div>
+</div>
+
+
+<div class="fixed right-4 top-1/2 transform -translate-y-1/2 z-50">
+ <form method="post" action="/product/{{ product['ID'] }}/add_to_cart">
+        <label>Qty:</label>
+        <input type="number" name="qty" value="1" min="1" max="67">
+
+        <button class="mt-5 bg-orange-300 border-black px-4 py-2 rounded-lg hover:bg-orange-400" type="submit">Add to Cart</button>
+            </form>
+</div>
+
+
+<form method="post" action="">
+<label>Qty:</label>
+<input type="number" name="qty" value="1"" min="1" max="67">
+
+<button class="mt-5 bg-orange-300 border-black px-4 cursor-pointer">
+</button>
+
+</form>
+
+  </body>
+</html>

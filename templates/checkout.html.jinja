@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+       
+
+<body class="bg-gradient-to-b from-gray-800 to-gray-600 min-h-screen font-sans text-gray-200">
+
+    {% include "components/navbar.html.jinja" %}
+
+    <br>
+      <br>
+        <br>
+          <br>
+           <br>
+            <br>
+
+    <main class="max-w-4xl mx-auto p-6 mb-10">
+
+        <!-- Page Title -->
+        <h1 class="text-3xl font-bold mb-6 text-white">Checkout</h1>
+
+        <!-- Order Summary -->
+        <div class="space-y-4 mb-10">
+            {% for x in cart %}
+            <div class="flex items-center justify-between bg-gray-900/70 backdrop-blur rounded-xl p-4 shadow-lg">
+
+                <!-- Product Image -->
+                <img src="{{x['Image']}}"
+                     class="w-16 h-16 object-cover rounded-lg border border-gray-700">
+
+                <!-- Product Info -->
+                <div class="flex-1 ml-4">
+                    <p class="text-lg font-semibold text-white">{{x['Name']}}</p>
+                    <p class="text-sm text-gray-400">
+                        F{{x['Price']}} × {{x['Quantity']}}
+                    </p>
+                </div>
+
+                <!-- Item Total -->
+                <div class="font-bold text-emerald-400">
+                    F{{x['Price'] * x['Quantity']}}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Payment Section -->
+        <div class="bg-gray-900/80 backdrop-blur rounded-2xl p-6 shadow-xl">
+
+            <h2 class="text-2xl font-semibold mb-6 text-white">Payment Details</h2>
+
+            <form method="post" action="/checkout/process_payment" class="space-y-5">
+
+                <!-- Card Number -->
+                <div>
+                    <label for="card_number" class="block mb-1 text-sm text-gray-400">
+                        Card Number
+                    </label>
+                    <input type="text" id="card_number" name="card_number" required
+                           placeholder="1234 5678 9012 3456"
+                           class="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-2 text-white
+                                  focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+
+                <!-- Expiry + CVV -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="expiry_date" class="block mb-1 text-sm text-gray-400">
+                            Expiry Date
+                        </label>
+                        <input type="text" id="expiry_date" name="expiry_date" required
+                               placeholder="MM/YY"
+                               class="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-2 text-white
+                                      focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+
+                    <div>
+                        <label for="cvv" class="block mb-1 text-sm text-gray-400">
+                            CVV
+                        </label>
+                        <input type="text" id="cvv" name="cvv" required
+                               placeholder="123"
+                               class="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-2 text-white
+                                      focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                </div>
+
+                <!-- Pay Button -->
+            <button type="submit"
+                        class="w-full mt-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700
+                               text-white font-semibold text-lg shadow-lg transition">
+                    Pay Now
+                </button>
+                
+            </form>
+        </div>
+
+    </main>
+
+</body>
+
+
+
+
+
+    
+
+</html>

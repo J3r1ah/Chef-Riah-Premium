@@ -6,29 +6,46 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
 
+<body class="bg-gradient-to-b from-gray-800 to-gray-600 min-h-screen font-sans text-gray-200">
 
-  <body>
-  {%include "components/navbar.html.jinja" %}
-  
+    {% include "components/navbar.html.jinja" %}
 
-    <h1 class="text-3xl font-bold underline">
-      browsePage
+    <!-- Spacer for fixed navbar -->
+    <div class="h-24"></div>
+
+    <!-- Page Title -->
+    <h1 class="text-4xl font-bold text-center mb-12 text-white">
+        Browse <span class="text-emerald-400">Products</span>
     </h1>
 
+    <!-- Products Grid -->
+    <main class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto p-6 mb-10">
 
-    <main class="grid grid-cols-4 gap-3 max-w-4xl mx-auto p-6 mb-5">
-    {% for x in products %}
-    <a href="/product/{{x['ID']}}"   class="grid"">
+        {% for x in products %}
+        <a href="/product/{{x['ID']}}"
+           class="group bg-gray-900/80 backdrop-blur rounded-2xl p-4 shadow-lg
+                  hover:shadow-emerald-500/20 transition transform hover:-translate-y-1">
 
-    <img class="h-100  w-130 mx-auto rounded-lg" src=" {{ x['Image'] }} "">
+            <!-- Product Image -->
+            <img src="{{x['Image']}}"
+                 class="h-48 w-full object-cover rounded-xl mb-4 border border-gray-700
+                        group-hover:border-emerald-400 transition">
 
-    <div class="text-center">{{x["Name"]}}</div>
+            <!-- Product Name -->
+            <div class="text-center text-lg font-semibold text-white mb-1">
+                {{x["ProductName"]}}
+            </div>
 
-    <div class="text-center font-bold text-sm">${{x["Price"]}}</div>
-    
-    </a>
-      {% endfor %}
+            <!-- Price -->
+            <div class="text-center font-bold text-emerald-400 text-lg">
+                ${{x["Price"]}}
+            </div>
+
+        </a>
+        {% endfor %}
+
     </main>
 
 </body>
+
 </html>

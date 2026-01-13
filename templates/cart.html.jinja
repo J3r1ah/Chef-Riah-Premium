@@ -5,16 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
-    <body>
-    {%include "components/navbar.html.jinja" %}     
+       
+<body class="bg-gradient-to-b from-gray-800 to-gray-600 min-h-screen font-sans text-gray-200">
 
-    <main>
+    {% include "components/navbar.html.jinja" %}
 
+    <br>
+      <br>
+        <br>
+          <br>
 
+    <main class="max-w-4xl mx-auto p-6 mb-10">
+        <!-- Page Title -->
+        <h1 class="text-3xl font-bold mb-6 text-white">Your Cart</h1>
 
+        <!-- Cart Container -->
+        <div class="space-y-4">
+            {% for x in cart %}
+            <div class="flex items-center justify-between bg-gray-900/70 backdrop-blur rounded-xl p-4 shadow-lg hover:shadow-xl transition">
+
+                <!-- Product Image -->
+                <img src="{{x['Image']}}" 
+                     class="w-20 h-20 object-cover rounded-lg border border-gray-700">
+
+                <!-- Product Name -->
+                <div class="flex-1 ml-4">
+                    <p class="text-lg font-semibold text-white">{{x['Name']}}</p>
+                    <p class="text-sm text-gray-400">Price: F{{x['Price']}}</p>
+                </div>
+
+                <!-- Quantity Form -->
+                <form method="post" action="/cart/{{x['ProductID']}}/update_qty" class="flex items-center gap-2">
+                    <input name="qty" type="number" value="{{x['Quantity']}}" min="1"
+                           class="w-16 bg-gray-800 border border-gray-600 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <button type="submit"
+                            class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm transition">
+                        Update
+                    </button>
+                </form>
+
+                <!-- Total -->
+                <div class="w-24 text-right font-bold text-emerald-400">
+                    F{{x['Price'] * x['Quantity']}}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        
+
+        <!-- Checkout Button -->
+        <div class="mt-8 text-right">
+           <button onclick="window.location.href='/checkout'" class="inline-block px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-lg transition">
+                Proceed to Checkout
+                </button>
+         
+        </div>
     </main>
 
+</body>
 
-    </body>
+
+
+
+
+    
 
 </html>
