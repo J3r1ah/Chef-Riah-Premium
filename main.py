@@ -211,7 +211,7 @@ def cart():
     return render_template("cart.html.jinja", cart=result)
 
 
-@app.route("/cart/<product_id>/update-qty", methods=["POST"])
+@app.route("/cart/<product_id>/update_qty", methods=["POST"])
 @login_required
 def update_qty(product_id):
     new_qty = request.form["qty"]
@@ -253,7 +253,7 @@ def checkout():
 
 
 
-@app.route("/payment", methods=["POST"])
+@app.route("/checkout/payment", methods=["POST"])
 @login_required
 def payment():
     connection = connect_db()
@@ -263,7 +263,7 @@ def payment():
     cursor.execute("""
         DELETE FROM `Cart`
         WHERE `UserID` = %s
-    """, (current_user.id,) )
+    """)
 
     connection.close()
 
@@ -274,26 +274,65 @@ def payment():
 
 @app.route("/order")
 def order():
+    """
+    Fetch and display the order history for the current user.
+
+    This function retrieves all orders made by the current user, including the order ID, 
+    timestamp, total quantity of items, and total price. If no orders are found, it flashes 
+    a message and renders the order page with an empty list.
+
+    Returns:
+        A rendered template displaying the order history or an empty list if no orders exist.
+    """
     connection = connect_db()
 
     cursor = connection.cursor()
 
     cursor.execute("""SELECT 
-                   `ID ,
-                   `Timestamp`,
+                   `Sale`.`ID`,
+                   `Sale`.`Timestamp`,
                    SUM(`SaleProduct`.`Quantity`) AS 'Quantity',
                    SUM(`SaleProduct`.`Quantity` * `Product`.`Price`) AS 'Total'
     FROM `Sale`
     JOIN `SaleProduct` ON `SaleProduct`.`SaleID` = `Sale`.`ID`
     JOIN `Product` ON `Product`.`ID` = `SaleProduct`.`ProductID`
-    GROUP BY `Sale`.`ID`
+    WHERE `Sale`.`UserID` = %s
+    GROUP BY `Sale`.`ID`, `Sale`.`Timestamp`
 """, (current_user.id,) )
     
     result = cursor.fetchall()
 
     connection.close()
 
+    if not result:
+        flash("No orders found.")
+        return render_template("order.html.jinja", sales=[])
+    
     return render_template("order.html.jinja", sales=result)
+
+
+
+
+@app.route("/product/<product_id>/review", methods=["POST"])
+@login_required
+def review(product_id):
+    # Get review from the form
+    rating = request.form["rating"]
+    comment = request.form["comment"]
+
+    connection = connect_db()
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        INSERT INTO `Review` (`Rating`, `Comment`, `ProductID`, `UserID`)
+        VALUES (%s, %s, %s, %s)
+    """, (rating , comment, current_user.id , product_id) )
+
+    connection.close()
+
+    return redirect(f"/product/{product_id}")
+
 
 
 

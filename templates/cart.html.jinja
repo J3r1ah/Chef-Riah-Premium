@@ -31,11 +31,11 @@
                 <!-- Product Name -->
                 <div class="flex-1 ml-4">
                     <p class="text-lg font-semibold text-white">{{x['Name']}}</p>
-                    <p class="text-sm text-gray-400">Price: F{{x['Price']}}</p>
+                    <p class="text-sm text-gray-400">Price: ${{x['Price']}}</p>
                 </div>
 
                 <!-- Quantity Form -->
-                <form method="post" action="/cart/{{x['ProductID']}}/update_qty" class="flex items-center gap-2">
+                <form method="post" action="/cart/<product_id>/update_qty" class="flex items-center gap-2">
                     <input name="qty" type="number" value="{{x['Quantity']}}" min="1"
                            class="w-16 bg-gray-800 border border-gray-600 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     <button type="submit"

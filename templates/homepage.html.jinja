@@ -5,43 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
-  <body class="bg-gradient-to-b from-gray-800 to-gray-600 min-h-screen font-sans text-gray-200">
-{%include "components/navbar.html.jinja" %}
+ 
 
-<br>
-<br>
-<br>
-<br>
+<body class="bg-gradient-to-b from-gray-800 to-gray-600 min-h-screen font-sans text-gray-200">
 
-<h1 class="text-3xl font-bold underline text-center text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.6)] mt-20 rounded-lg p-4 bg-neutral-800 max-w-md mx-auto border border-cyan-500">
-  HomePage
-</h1>
+    {% include "components/navbar.html.jinja" %}
 
-<br>
-<br>
+    <!-- Spacer for fixed navbar -->
+    <div class="h-24"></div>
 
-<main class="grid grid-cols-4 gap-3 max-w-4xl mx-auto p-6 mb-5">
-  {% for x in products %}
-    <a href="/product/{{x['ID']}}"
-       class="grid items-center justify-center p-4 border border-cyan-500 rounded-lg
-              bg-neutral-800 hover:shadow-[0_0_25px_rgba(34,211,238,0.7)]
-              hover:border-fuchsia-500 transition duration-300">
-      
-      <img class="h-50 mx-auto rounded-lg border border-neutral-700" src="{{x['Image']}}">
-      <br>
-
-      <div class="text-center text-cyan-400 font-semibold">
-        {{x["ProductName"]}}
-      </div>
-      <br>
-
-      <div class="text-center font-bold text-sm text-fuchsia-400">
-        ${{x["Price"]}}
-      </div>
-    </a>
-  {% endfor %}
-</main>
+    <!-- Page Title -->
+    <h1 class="text-4xl font-bold text-center mb-12 text-white">
+        Home <span class="text-emerald-400">Page</span>
+    </h1>
 
 </body>
+
+
+
 
 </html>
