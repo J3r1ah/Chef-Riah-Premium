@@ -36,13 +36,13 @@
                 <div class="flex-1 ml-4">
                     <p class="text-lg font-semibold text-white">{{x['Name']}}</p>
                     <p class="text-sm text-gray-400">
-                        F{{x['Price']}} × {{x['Quantity']}}
+                        ${{x['Price']}} × {{x['Quantity']}}
                     </p>
                 </div>
 
                 <!-- Item Total -->
                 <div class="font-bold text-emerald-400">
-                    F{{x['Price'] * x['Quantity']}}
+                    ${{x['Price'] * x['Quantity']}}
                 </div>
             </div>
             {% endfor %}

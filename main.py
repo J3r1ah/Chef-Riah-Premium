@@ -211,10 +211,10 @@ def cart():
     return render_template("cart.html.jinja", cart=result)
 
 
-@app.route("/cart/<product_id>/update_qty", methods=["POST"])
+@app.route("/cart/<product_id>/update_quantity", methods=["POST"])
 @login_required
-def update_qty(product_id):
-    new_qty = request.form["qty"]
+def update_quantity(product_id):
+    new_quantity = request.form["Quantity"]
     
     connection = connect_db()
 
@@ -224,7 +224,7 @@ def update_qty(product_id):
             UPDATE `Cart`
             SET `Quantity` = %s
             WHERE `ProductID` = %s AND `UserID` = %s
-        """, (new_qty, product_id, current_user.id) )
+        """, (new_quantity, product_id, current_user.id) )
 
     connection.close()
 
@@ -263,7 +263,7 @@ def payment():
     cursor.execute("""
         DELETE FROM `Cart`
         WHERE `UserID` = %s
-    """)
+    """, (current_user.id,))
 
     connection.close()
 
@@ -313,21 +313,21 @@ def order():
 
 
 
-@app.route("/product/<product_id>/review", methods=["POST"])
+@app.route("/product/<product_id>/review", methods=["POST, GET"])
 @login_required
 def review(product_id):
     # Get review from the form
     rating = request.form["rating"]
-    comment = request.form["comment"]
+    comments = request.form["comments"]
 
     connection = connect_db()
 
     cursor = connection.cursor()
 
     cursor.execute("""
-        INSERT INTO `Review` (`Rating`, `Comment`, `ProductID`, `UserID`)
+        INSERT INTO `Review` (`Rating`, `Comments`, `ProductID`, `UserID`)
         VALUES (%s, %s, %s, %s)
-    """, (rating , comment, current_user.id , product_id) )
+    """, (rating , comments, product_id, current_user.id ) )
 
     connection.close()
 

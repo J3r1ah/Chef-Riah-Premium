@@ -35,18 +35,22 @@
                 </div>
 
                 <!-- Quantity Form -->
-                <form method="post" action="/cart/<product_id>/update_qty" class="flex items-center gap-2">
-                    <input name="qty" type="number" value="{{x['Quantity']}}" min="1"
-                           class="w-16 bg-gray-800 border border-gray-600 rounded-lg px-2 py-1 text-center text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    <button type="submit"
-                            class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm transition">
-                        Update
-                    </button>
-                </form>
+                <form method="post" action="/cart/<product_id>/update_quantity" class="flex items-center gap-2">
+                  <input
+              name="Quantity" type="number" value="{{ x['Quantity'] }}" min="1"
+              class="w-16 border rounded px-2 py-1 text-center">
+            <button type="submit"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+              Update
+            </button>
+          </form>
+        </div>
+
+
 
                 <!-- Total -->
                 <div class="w-24 text-right font-bold text-emerald-400">
-                    F{{x['Price'] * x['Quantity']}}
+                    ${{x['Price'] * x['Quantity']}}
                 </div>
             </div>
             {% endfor %}
